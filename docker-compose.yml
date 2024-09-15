@@ -1,0 +1,27 @@
+services:
+  sqlserver:
+    build: ./db
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=dvpTasks1234.
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+  webapi:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: web-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DvpTasksConnection=Data Source=sqlserver;Database=DvpTasks;Integrated Security=false;User ID=dvp_tasks;Password=DvpT4sk5;Encrypt=true;TrustServerCertificate=true;
+    ports:
+      - "8080:80"
+    depends_on:
+      - sqlserver
+
+
+volumes:
+  sqlserver-data:
