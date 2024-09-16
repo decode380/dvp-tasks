@@ -14,29 +14,22 @@ GO
 GRANT VIEW DEFINITION ON DATABASE::DvpTasks TO dvp_tasks;
 GO
 
-
-CREATE TABLE [User](
-	id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	email varchar(100) NOT NULL,
-	[password] varchar(150) NOT NULL,
-	[name] nvarchar (100) NOT NULL,
-);
-GO
-
 CREATE TABLE [Role](
 	id varchar(30) PRIMARY KEY NOT NULL,
 	[name] VARCHAR(50) NOT NULL
 );
 GO
 
-CREATE TABLE [UserRole] (
-    userId INT NOT NULL,
-    roleId VARCHAR(30) NOT NULL,
-    FOREIGN KEY (userId) REFERENCES [dbo].[User](id),
-    FOREIGN KEY (roleId) REFERENCES [dbo].[Role](id),
-    PRIMARY KEY (userId, roleId)
+CREATE TABLE [User](
+	id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	email varchar(100) UNIQUE NOT NULL,
+	[password] varchar(150) NOT NULL,
+	[name] nvarchar (100) NOT NULL,
+  [roleId] VARCHAR(30) NOT NULL,
+  FOREIGN KEY (roleId) REFERENCES [dbo].[Role](id)
 );
 GO
+
 
 CREATE TABLE [State](
     id VARCHAR(30) PRIMARY KEY NOT NULL,
@@ -49,44 +42,8 @@ CREATE TABLE [TaskJob](
     userId INT NOT NULL,
     [name] NVARCHAR(150) NOT NULL,
     [stateId] VARCHAR(30) NOT NULL,
-    FOREIGN KEY(userId) REFERENCES [dbo].[User](id),
+    FOREIGN KEY(userId) REFERENCES [dbo].[User](id) ON DELETE CASCADE,
     FOREIGN KEY(stateId) REFERENCES [dbo].[State](id),
-);
-GO
-
-
-
-INSERT INTO [User]
-(
-		 [email]
-		,[password]
-		,[name]
-)
-VALUES
-(
-		'admin@email.com'
-		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
-		,'Administrador'
-),
-(
-		'supervisor@email.com'
-		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
-		,'Supervisor'
-),
-(
-		'employee1@email.com'
-		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
-		,'Primer Trabajador'
-),
-(
-		'employee2@email.com'
-		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
-		,'Segundo Trabajador'
-),
-(
-		'employee3@email.com'
-		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
-		,'Tercer Trabajador'
 );
 GO
 
@@ -112,27 +69,48 @@ VALUES
 GO
 
 
-INSERT INTO [UserRole]
-(
-		 [userId]
-		,[roleId]
-)
-SELECT id, 'ADMIN' FROM [User] WHERE email = 'admin@email.com'
 
-INSERT INTO [UserRole]
+INSERT INTO [User]
 (
-		 [userId]
-		,[roleId]
+		 [email]
+		,[password]
+		,[name]
+    ,[roleId]
 )
-SELECT id, 'SUPERVISOR' FROM [User] WHERE email = 'supervisor@email.com'
+VALUES
+(
+		'admin@email.com'
+		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
+		,'Administrador'
+    ,'ADMIN'
+),
+(
+		'supervisor@email.com'
+		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
+		,'Supervisor'
+    ,'SUPERVISOR'
+),
+(
+		'employee1@email.com'
+		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
+		,'Primer Trabajador'
+    ,'EMPLOYEE'
+),
+(
+		'employee2@email.com'
+		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
+		,'Segundo Trabajador'
+    ,'EMPLOYEE'
+),
+(
+		'employee3@email.com'
+		,'$2a$11$Losq4gwDWSAN2EvNjji8d.ilKQ7dPrjubikwOh7dBc6UtAsu0MGVS'
+		,'Tercer Trabajador'
+    ,'EMPLOYEE'
+);
+GO
 
 
-INSERT INTO [UserRole]
-(
-		 [userId]
-		,[roleId]
-)
-SELECT id, 'EMPLOYEE' FROM [User] WHERE email in ('employee1@email.com', 'employee2@email.com', 'employee3@email.com')
 
 INSERT INTO [State]
 (

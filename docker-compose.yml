@@ -1,6 +1,7 @@
 services:
   sqlserver:
     build: ./db
+    container_name: dvp-tasks--db
     ports:
       - "1433:1433"
     environment:
@@ -13,7 +14,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    container_name: web-api
+    container_name: dvp-tasks--api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DvpTasksConnection=Data Source=sqlserver;Database=DvpTasks;Integrated Security=false;User ID=dvp_tasks;Password=DvpT4sk5;Encrypt=true;TrustServerCertificate=true;
@@ -21,6 +22,16 @@ services:
       - "8080:80"
     depends_on:
       - sqlserver
+
+  webfront:
+    build: ./front
+    container_name: dvp-tasks--front
+    environment:
+      - API_URL=http://webapi:80
+    ports:
+      - 8081:80
+    depends_on:
+      - webapi
 
 
 volumes:

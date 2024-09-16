@@ -2,3 +2,7 @@
 	path = api
 	url = https://github.com/decode380/dvp-tasks--api.git
 	branch = master
+[submodule "front"]
+	path = front
+	url = https://github.com/decode380/dvp-tasks--front.git
+	branch = master
