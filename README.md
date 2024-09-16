@@ -22,7 +22,7 @@
 
 - La base de datos de SQL Server se mantendrá servida en el puerto 1433 para poder utilizar cualquier administrador de base de datos con cualquiera de los dos usuarios preconfigurados en el levantamiento al `localhost:1433`:
     - usuario 'sa' con contraseña 'dvpTasks1234.'
-    - usuario 'DvpTasks' con contraseña 'dvp_tasks'
+    - usuario 'dvp_tasks' con contraseña 'DvpT4sk5'
 
 - La web API está servida en el puerto 8081 al `http://localhost:8080/swagger/index.html` donde se podrá ver la documentación de swagger o consumir la API al `http://localhost:8080/`
 
